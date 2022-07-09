@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Scanner;
 
 import javax.swing.JButton;
@@ -50,7 +51,7 @@ import javax.swing.text.Utilities;
 
 import core.JMPortugueseDictionary;
 
-public class TextEditorView extends JFrame implements ActionListener {
+public class TextEditorView extends JFrame {
 
 	private String userHomeDirectory = System.getProperty("user.home");
 	private JMPortugueseDictionary portugueseDictionary = null;
@@ -72,74 +73,74 @@ public class TextEditorView extends JFrame implements ActionListener {
 		this.teste();
 	}
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == this.fontColorButton) {
-			Color color = JColorChooser.showDialog(null, "Escolha uma cor", Color.black);
-			this.textArea.setForeground(color);
-		}
-
-		if (e.getSource() == this.fontBox) {
-			this.textArea
-					.setFont(new Font((String) fontBox.getSelectedItem(), Font.PLAIN, textArea.getFont().getSize()));
-		}
-
-		if (e.getSource() == this.openFileMenuItem) {
-			JFileChooser fileChooser = new JFileChooser();
-			fileChooser.setCurrentDirectory(new File("."));
-			FileNameExtensionFilter filter = new FileNameExtensionFilter("TXT", "txt");
-			fileChooser.setFileFilter(filter);
-
-			int response = fileChooser.showSaveDialog(null);
-
-			if (response == JFileChooser.APPROVE_OPTION) {
-				File file = new File(fileChooser.getSelectedFile().getAbsolutePath());
-				Scanner fileIn = null;
-
-				try {
-					fileIn = new Scanner(file);
-					if (file.isFile()) {
-						while (fileIn.hasNextLine()) {
-							String line = fileIn.nextLine() + "\n";
-//							this.textArea.append(line);
-						}
-					}
-
-				} catch (FileNotFoundException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} finally {
-					fileIn.close();
-				}
-			}
-		}
-
-		if (e.getSource() == this.saveFileMenuItem) {
-			JFileChooser fileChooser = new JFileChooser();
-			fileChooser.setCurrentDirectory(new File(this.userHomeDirectory));
-
-			int response = fileChooser.showSaveDialog(null);
-
-			if (response == JFileChooser.APPROVE_OPTION) {
-				File file = new File(fileChooser.getSelectedFile().getAbsolutePath());
-				PrintWriter fileOut = null;
-
-				try {
-					fileOut = new PrintWriter(file);
-					fileOut.println(textArea.getText());
-				} catch (FileNotFoundException e1) {
-					e1.printStackTrace();
-				} finally {
-					fileOut.close();
-				}
-			}
-		}
-
-		if (e.getSource() == this.exitMenuItem) {
-			System.exit(0);
-		}
-
-	}
+//	@Override
+//	public void actionPerformed(ActionEvent e) {
+//		if (e.getSource() == this.fontColorButton) {
+//			Color color = JColorChooser.showDialog(null, "Escolha uma cor", Color.black);
+//			this.textArea.setForeground(color);
+//		}
+//
+//		if (e.getSource() == this.fontBox) {
+//			this.textArea
+//					.setFont(new Font((String) fontBox.getSelectedItem(), Font.PLAIN, textArea.getFont().getSize()));
+//		}
+//
+//		if (e.getSource() == this.openFileMenuItem) {
+//			JFileChooser fileChooser = new JFileChooser();
+//			fileChooser.setCurrentDirectory(new File("."));
+//			FileNameExtensionFilter filter = new FileNameExtensionFilter("TXT", "txt");
+//			fileChooser.setFileFilter(filter);
+//
+//			int response = fileChooser.showSaveDialog(null);
+//
+//			if (response == JFileChooser.APPROVE_OPTION) {
+//				File file = new File(fileChooser.getSelectedFile().getAbsolutePath());
+//				Scanner fileIn = null;
+//
+//				try {
+//					fileIn = new Scanner(file);
+//					if (file.isFile()) {
+//						while (fileIn.hasNextLine()) {
+//							String line = fileIn.nextLine() + "\n";
+////							this.textArea.append(line);
+//						}
+//					}
+//
+//				} catch (FileNotFoundException e1) {
+//					// TODO Auto-generated catch block
+//					e1.printStackTrace();
+//				} finally {
+//					fileIn.close();
+//				}
+//			}
+//		}
+//
+//		if (e.getSource() == this.saveFileMenuItem) {
+//			JFileChooser fileChooser = new JFileChooser();
+//			fileChooser.setCurrentDirectory(new File(this.userHomeDirectory));
+//
+//			int response = fileChooser.showSaveDialog(null);
+//
+//			if (response == JFileChooser.APPROVE_OPTION) {
+//				File file = new File(fileChooser.getSelectedFile().getAbsolutePath());
+//				PrintWriter fileOut = null;
+//
+//				try {
+//					fileOut = new PrintWriter(file);
+//					fileOut.println(textArea.getText());
+//				} catch (FileNotFoundException e1) {
+//					e1.printStackTrace();
+//				} finally {
+//					fileOut.close();
+//				}
+//			}
+//		}
+//
+//		if (e.getSource() == this.exitMenuItem) {
+//			System.exit(0);
+//		}
+//
+//	}
 
 	public void teste() {
 		SwingUtilities.invokeLater(() -> {
@@ -155,7 +156,7 @@ public class TextEditorView extends JFrame implements ActionListener {
 						try {
 							final StyledDocument doc = pane.getStyledDocument();
 
-							final int offset = pane.viewToModel(mevt.getPoint());
+							final int offset = pane.viewToModel2D(mevt.getPoint());
 
 							final int start = Utilities.getWordStart(pane, offset),
 									end = Utilities.getWordEnd(pane, offset);
@@ -167,14 +168,15 @@ public class TextEditorView extends JFrame implements ActionListener {
 
 							final JPanel popupPanel = new JPanel();
 
-							final int cnt = 4;
+							LinkedList<String> words2 =portugueseDictionary.getSugestions(word);
+							final int cnt = words2.size();
 							final ArrayList<JButton> words = new ArrayList<>();
 							for (int i = 0; i < cnt; ++i) {
-								final JButton button = new JButton(word + (i + 1));
+								final JButton button = new JButton(words2.get(i));
 								popupPanel.add(button);
 								words.add(button);
 							}
-							final JButton cancel = new JButton("Cancel");
+							final JButton cancel = new JButton("x");
 							popupPanel.add(cancel);
 
 							final Popup popup = PopupFactory.getSharedInstance().getPopup(pane, popupPanel,
@@ -237,24 +239,27 @@ public class TextEditorView extends JFrame implements ActionListener {
 			});
 
 			doc.addDocumentListener(new DocumentListener() {
-				private void clearStyle(final DocumentEvent e) {
+				private void clearStyle(final DocumentEvent e, int start, int end) {
 					SwingUtilities
-							.invokeLater(() -> doc.setCharacterAttributes(0, doc.getLength(), defaultStyle, true));
+							.invokeLater(() -> doc.setCharacterAttributes(start, end - start, defaultStyle, true));
 				}
 
 				@Override
 				public void insertUpdate(final DocumentEvent e) {
-					System.out.println(checkLastWord(e));
+//					System.out.println(checkLastWord(e));
+					checkLastWord(e);
 				}
 
 				@Override
 				public void removeUpdate(final DocumentEvent e) {
-					System.out.println(checkLastWord(e));
+//					System.out.println(checkLastWord(e));
+					checkLastWord(e);
 				}
 
 				@Override
 				public void changedUpdate(final DocumentEvent e) {					
-					System.out.println(checkLastWord(e));
+//					System.out.println(checkLastWord(e));
+					checkLastWord(e);
 				}
 				
 				protected String checkLastWord(final DocumentEvent e) {
@@ -265,10 +270,10 @@ public class TextEditorView extends JFrame implements ActionListener {
 						final int end = Utilities.getWordEnd(pane, pane.getCaretPosition());
 						String text = pane.getDocument().getText(start, end - start);
 						
-						if (portugueseDictionary.getPortugueseWords().get(text) == null) {
+						if (!portugueseDictionary.hasPortugueseWord(text)) {
 							SwingUtilities.invokeLater(() -> doc.setCharacterAttributes(start, end - start, sas, true));							
 						} else {
-							clearStyle(e);
+							clearStyle(e, start, end);
 						}
 						
 						return text;

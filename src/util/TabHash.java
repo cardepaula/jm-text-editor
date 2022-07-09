@@ -4,7 +4,7 @@ import java.util.LinkedList;
 
 public class TabHash<T> {
 
-	private int tamanho;
+	private int tamanho, constante = 31;
 
 	public String chave;
 	public LinkedList<T>[] tabela;
@@ -13,18 +13,24 @@ public class TabHash<T> {
 		this.tamanho = tamanhoTabela;
 		this.createTable();
 	}
+	
+	public TabHash(int tamanhoTabela, int constante) {
+		this.tamanho = tamanhoTabela;
+		this.constante = constante;
+		this.createTable();
+	}
 
 	public LinkedList<T> get(String chave) {
-		int posHash = this.geraPosicaoHash(chave);
+		int posHash = this.getHash(chave);
 
-		if(this.tabela[posHash].isEmpty()) {
-			return null;			
-		}
 		return this.tabela[posHash];
 	}
 
+	public LinkedList<T> get(int posHash) {
+		return this.tabela[posHash];
+	}
 	public int put(T item, String chave) {
-		int posHash = this.geraPosicaoHash(chave);
+		int posHash = this.getHash(chave);
 		int colisao = posHash;
 
 		if (!this.tabela[posHash].isEmpty()) {
@@ -36,16 +42,19 @@ public class TabHash<T> {
 	}
 
 	public void delete(String chave) {
-		int posHash = this.geraPosicaoHash(chave);
+		int posHash = this.getHash(chave);
 		this.tabela[posHash].remove(chave);
 	}
 
-	private int geraPosicaoHash(String item) {
+	public int getHash(String item) {
 		int pos = item.charAt(0);
 		for (int i = 1; i < item.length(); i++) {
-			pos = (pos * 33 + item.charAt(i)) % this.tamanho;			
+			pos = pos * this.constante + item.charAt(i) ;			
 		}
-		return pos;
+		if (pos < 0) {
+			pos = pos * -1;
+		}
+		return pos % this.tamanho;
 	}
 
 	private void createTable() {
