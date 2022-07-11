@@ -270,12 +270,13 @@ public class TextEditorView extends JFrame {
 						final int end = Utilities.getWordEnd(pane, pane.getCaretPosition());
 						String text = pane.getDocument().getText(start, end - start);
 						
+						if (text.matches("^[a-zA-Z\\u00C0-\\u00FF]+$")) {
 						if (!portugueseDictionary.hasPortugueseWord(text)) {
 							SwingUtilities.invokeLater(() -> doc.setCharacterAttributes(start, end - start, sas, true));							
 						} else {
 							clearStyle(e, start, end);
 						}
-						
+						}
 						return text;
 					} catch (Exception e1) {
 						e1.printStackTrace();
