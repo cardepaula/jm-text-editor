@@ -70,79 +70,10 @@ public class TextEditorView extends JFrame {
 
 	public TextEditorView(JMPortugueseDictionary portugueseDictionary) {
 		this.portugueseDictionary = portugueseDictionary;
-		this.teste();
+		this.textEditor();
 	}
 
-//	@Override
-//	public void actionPerformed(ActionEvent e) {
-//		if (e.getSource() == this.fontColorButton) {
-//			Color color = JColorChooser.showDialog(null, "Escolha uma cor", Color.black);
-//			this.textArea.setForeground(color);
-//		}
-//
-//		if (e.getSource() == this.fontBox) {
-//			this.textArea
-//					.setFont(new Font((String) fontBox.getSelectedItem(), Font.PLAIN, textArea.getFont().getSize()));
-//		}
-//
-//		if (e.getSource() == this.openFileMenuItem) {
-//			JFileChooser fileChooser = new JFileChooser();
-//			fileChooser.setCurrentDirectory(new File("."));
-//			FileNameExtensionFilter filter = new FileNameExtensionFilter("TXT", "txt");
-//			fileChooser.setFileFilter(filter);
-//
-//			int response = fileChooser.showSaveDialog(null);
-//
-//			if (response == JFileChooser.APPROVE_OPTION) {
-//				File file = new File(fileChooser.getSelectedFile().getAbsolutePath());
-//				Scanner fileIn = null;
-//
-//				try {
-//					fileIn = new Scanner(file);
-//					if (file.isFile()) {
-//						while (fileIn.hasNextLine()) {
-//							String line = fileIn.nextLine() + "\n";
-////							this.textArea.append(line);
-//						}
-//					}
-//
-//				} catch (FileNotFoundException e1) {
-//					// TODO Auto-generated catch block
-//					e1.printStackTrace();
-//				} finally {
-//					fileIn.close();
-//				}
-//			}
-//		}
-//
-//		if (e.getSource() == this.saveFileMenuItem) {
-//			JFileChooser fileChooser = new JFileChooser();
-//			fileChooser.setCurrentDirectory(new File(this.userHomeDirectory));
-//
-//			int response = fileChooser.showSaveDialog(null);
-//
-//			if (response == JFileChooser.APPROVE_OPTION) {
-//				File file = new File(fileChooser.getSelectedFile().getAbsolutePath());
-//				PrintWriter fileOut = null;
-//
-//				try {
-//					fileOut = new PrintWriter(file);
-//					fileOut.println(textArea.getText());
-//				} catch (FileNotFoundException e1) {
-//					e1.printStackTrace();
-//				} finally {
-//					fileOut.close();
-//				}
-//			}
-//		}
-//
-//		if (e.getSource() == this.exitMenuItem) {
-//			System.exit(0);
-//		}
-//
-//	}
-
-	public void teste() {
+	public void textEditor() {
 		SwingUtilities.invokeLater(() -> {
 			final JTextPane pane = new JTextPane();
 			final Style defaultStyle = StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE);
@@ -271,11 +202,11 @@ public class TextEditorView extends JFrame {
 						String text = pane.getDocument().getText(start, end - start);
 						
 						if (text.matches("^[a-zA-Z\\u00C0-\\u00FF]+$")) {
-						if (!portugueseDictionary.hasPortugueseWord(text)) {
-							SwingUtilities.invokeLater(() -> doc.setCharacterAttributes(start, end - start, sas, true));							
-						} else {
-							clearStyle(e, start, end);
-						}
+							if (!portugueseDictionary.hasPortugueseWord(text)) {
+								SwingUtilities.invokeLater(() -> doc.setCharacterAttributes(start, end - start, sas, true));							
+							} else {
+								clearStyle(e, start, end);
+							}							
 						}
 						return text;
 					} catch (Exception e1) {
