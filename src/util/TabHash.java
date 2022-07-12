@@ -57,6 +57,7 @@ public class TabHash<T> {
 		return pos % this.tamanho;
 	}
 
+	@SuppressWarnings("unchecked")
 	private void createTable() {
 		this.tabela = new LinkedList[this.tamanho];
 
