@@ -53,20 +53,8 @@ import core.JMPortugueseDictionary;
 
 public class TextEditorView extends JFrame {
 
-	private String userHomeDirectory = System.getProperty("user.home");
+//	private String userHomeDirectory = System.getProperty("user.home");
 	private JMPortugueseDictionary portugueseDictionary = null;
-
-	JTextPane textArea;
-	JScrollPane scrollPane;
-	JSpinner fontSizeSpinner;
-	JLabel fontSizeSpinnerLabel;
-	JButton fontColorButton;
-	JComboBox fontBox;
-	JMenuBar menubar;
-	JMenu fileMenu;
-	JMenuItem openFileMenuItem;
-	JMenuItem saveFileMenuItem;
-	JMenuItem exitMenuItem;
 
 	public TextEditorView(JMPortugueseDictionary portugueseDictionary) {
 		this.portugueseDictionary = portugueseDictionary;
@@ -74,6 +62,7 @@ public class TextEditorView extends JFrame {
 	}
 
 	public void textEditor() {
+		
 		SwingUtilities.invokeLater(() -> {
 			final JTextPane pane = new JTextPane();
 			final Style defaultStyle = StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE);
